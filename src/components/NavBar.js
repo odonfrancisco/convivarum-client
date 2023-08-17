@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 
 // Update MUI imports
@@ -10,10 +10,11 @@ import Grid from '@mui/material/Grid'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 
 // Update icon imports
-import AddCircleIcon from '@mui/icons-material/AddCircle'
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
 import VerifiedUser from '@mui/icons-material/VerifiedUser'
 import LowPriorityIcon from '@mui/icons-material/LowPriority'
+
+import UserContext from '#context/UserContext.js'
 
 const theme = createTheme({
   palette: {
@@ -42,6 +43,8 @@ const NavButton = ({ link, icon, text }) => (
 )
 
 export default function NavBar() {
+  const { user } = useContext(UserContext)
+
   return (
     <ThemeProvider theme={theme}>
       <AppBar color="secondary">
@@ -58,15 +61,25 @@ export default function NavBar() {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={2}>
-            <NavButton link={'/friends'} icon={<FormatListBulletedIcon />} text={'My Friends'} />
-          </Grid>
-          <Grid item xs={2}>
-            <NavButton link={'/user'} icon={<VerifiedUser />} text={'Profile'} />
-          </Grid>
-          <Grid item xs={2}>
-            <NavButton link={'/logout'} icon={<LowPriorityIcon />} text={'Logout'} />
-          </Grid>
+          {user && (
+            <Grid item xs={2}>
+              <NavButton link={'/friends'} icon={<FormatListBulletedIcon />} text={'My Friends'} />
+            </Grid>
+          )}
+          {user && (
+            <Grid item xs={2}>
+              <NavButton link={'/user'} icon={<VerifiedUser />} text={'Profile'} />
+            </Grid>
+          )}
+          {user ? (
+            <Grid item xs={2}>
+              <NavButton link={'/logout'} icon={<LowPriorityIcon />} text={'Logout'} />
+            </Grid>
+          ) : (
+            <Grid item xs={2}>
+              <NavButton link={'/auth'} icon={<LowPriorityIcon />} text={'Login'} />
+            </Grid>
+          )}
         </Grid>
       </AppBar>
     </ThemeProvider>
