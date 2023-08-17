@@ -12,7 +12,7 @@ import {
 import { SELECT_MS } from '#config'
 import parseActionInterval from '#fn/parseActionInterval'
 
-export default function DurationInput({ key, label, def = 0, setFormData }) {
+export default function DurationInput({ keyed, label, def = 0, setFormData }) {
   const [numberValue, setNumberValue] = useState(def)
   const [selectValue, setSelectValue] = useState('hours')
 
@@ -21,15 +21,14 @@ export default function DurationInput({ key, label, def = 0, setFormData }) {
   }, [])
 
   const updateFormData = () => {
-    setFormData(prev => ({ ...prev, [key]: numberValue * SELECT_MS[selectValue] }))
+    setFormData(prev => ({ ...prev, [keyed]: numberValue * SELECT_MS[selectValue] }))
   }
 
   const handleNumberChange = e => {
     const value = parseInt(e.target.value, 10)
-    if (value >= 0) {
-      setNumberValue(value)
-      updateFormData()
-    }
+    const up = value >= 0 ? value : 0
+    setNumberValue(up)
+    updateFormData()
   }
 
   return (

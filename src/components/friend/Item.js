@@ -18,11 +18,14 @@ function FriendItemComponent({ friend, onSubmit, isEditing }) {
       >
         <Box>
           <Typography variant="h6">{friend.name}</Typography>
-          <Typography variant="body1" sx={{ mt: 0.5 }}>
+          {/* <Typography variant="body1" sx={{ mt: 0.5 }}>
             {friend.details}
-          </Typography>
+          </Typography> */}
           <Typography variant="body2" sx={{ mt: 0.5 }}>
             Contacted: {String(friend.contacted)}
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 0.5 }}>
+            {String(friend.action)}
           </Typography>
         </Box>
       </ListItem>{' '}

@@ -25,8 +25,8 @@ export const FRIEND_FIELDS = obj =>
     return obj
   })
 
-export const USER_FIELDS = obj =>
-  [
+export const USER_FIELDS = obj => {
+  const arr = [
     {
       name: 'username',
       type: 'text',
@@ -34,13 +34,25 @@ export const USER_FIELDS = obj =>
       default: obj?.username || '',
     },
     { name: 'email', type: 'text', default: obj?.email || '' },
-    ...Object.entries(obj.freq).map(([action, obj]) => ({
-      key: `freq.${action}`,
+    ...Object.entries(obj.action).map(([action, obj]) => ({
+      key: `action.${action}.interval`,
       name: action,
       type: 'duration',
-      default: obj.interval || 1,
+      default: obj.interval || 0,
     })),
-  ].map(obj => {
+    // ...(!obj.next
+    //   ? [
+    //       {
+    //         key: 'delayNext',
+    //         name: 'Delay distribution start',
+    //         type: 'duration',
+    //       },
+    //     ]
+    //   : []),
+  ]
+
+  return arr.map(obj => {
     if (!obj.key) obj.key = obj.name
     return obj
   })
+}

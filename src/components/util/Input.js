@@ -100,7 +100,7 @@ function InputForm({ fields, onFormSubmit, url, text, show = false }) {
           <DurationInput
             def={formData[field.key]}
             setFormData={setFormData}
-            key={field.key}
+            keyed={field.key}
             label={field.name}
           />
         )

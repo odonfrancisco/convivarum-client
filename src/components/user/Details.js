@@ -24,6 +24,18 @@ const FreqDetail = styled.div`
   margin-left: 20px;
 `
 
+const ActionDetail = ({ user, action }) => {
+  return (
+    <FreqDetail>
+      <strong>{action}: </strong>
+      Last -{' '}
+      {!user.action[action].last ? 'never' : formatDistance(user.action[action].last, Date.now())},
+      Interval - {parseActionInterval({ val: user.action[action].interval })}
+    </FreqDetail>
+  )
+}
+
+// Missing small details like re-fetching/updating the existing user in context on successful call
 function UserProfile() {
   const { user } = useContext(UserContext)
 
@@ -56,22 +68,10 @@ function UserProfile() {
           </UserDetail>
 
           <UserDetail>
-            <strong>Frequency:</strong>
-            <FreqDetail>
-              <strong>Call: </strong>
-              Last - {!user.freq.call.last ? 'never' : formatDistance(user.freq.call.last)},
-              Interval - {parseActionInterval({ val: user.freq.call.interval })}
-            </FreqDetail>
-            <FreqDetail>
-              <strong>Text: </strong>
-              Last - {!user.freq.text.last ? 'never' : formatDistance(user.freq.text.last)},
-              Interval - {parseActionInterval({ val: user.freq.text.interval })}
-            </FreqDetail>
-            <FreqDetail>
-              <strong>Hang: </strong>
-              Last - {!user.freq.hang.last ? 'never' : formatDistance(user.freq.hang.last)},
-              Interval - {parseActionInterval({ val: user.freq.hang.interval })}
-            </FreqDetail>
+            <strong>Actions:</strong>
+            {['call', 'text', 'hang'].map(action => (
+              <ActionDetail action={action} user={user} />
+            ))}
           </UserDetail>
         </UserDetailsContainer>
       )}
