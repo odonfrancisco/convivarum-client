@@ -16,7 +16,7 @@ function Logout() {
       setUser(null)
     }
     logout()
-  }, [])
+  }, [Navigate, setUser])
 
   return <div></div>
 }
