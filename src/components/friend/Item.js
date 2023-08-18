@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import formatDistance from 'date-fns/formatDistance'
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -24,6 +25,11 @@ function FriendItemComponent({ friend, onSubmit, isEditing }) {
           <Typography variant="body2" sx={{ mt: 0.5 }}>
             Contacted: {String(friend.contacted)}
           </Typography>
+          {friend.lastContacted && (
+            <Typography variant="body2" sx={{ mt: 0.5 }}>
+              Last Contacted: {formatDistance(friend.lastContacted, Date.now())}
+            </Typography>
+          )}
           <Typography variant="body2" sx={{ mt: 0.5 }}>
             {String(friend.action)}
           </Typography>

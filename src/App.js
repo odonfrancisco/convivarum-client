@@ -1,7 +1,7 @@
 // React
 import React, { useState, useContext, useEffect } from 'react'
 // import { Switch, Route, Redirect } from 'react-router-dom'
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 
@@ -20,7 +20,7 @@ let i = 0
 function App() {
   const Navigate = useNavigate()
   const { setUser } = useContext(UserContext)
-  const [redirect, setRedirect] = useState()
+  const [redirect] = useState()
 
   useEffect(() => {
     async function checkUserStatus() {
@@ -37,7 +37,7 @@ function App() {
     }
 
     checkUserStatus()
-  }, [Navigate])
+  }, [Navigate, setUser])
 
   return (
     <Container disableGutters>

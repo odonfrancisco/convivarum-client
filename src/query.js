@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const baseUrl =
   process.env.NODE_ENV === 'production'
-    ? 'https://convivarum.odonfrancis.co/api'
+    ? 'http://api.odonfrancis.co/api'
     : 'http://localhost:8080/api'
 
 export default async function query(ext, { method = 'get', payload } = {}) {

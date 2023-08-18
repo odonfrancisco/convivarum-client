@@ -22,7 +22,7 @@ function FriendList() {
   const [editingMode, setEditingMode] = useState(false)
   const [collapse, setCollapse] = useState(true)
   const [sort, setSort] = useState(SORT_TYPES[1])
-  const [error, setError] = useState(null)
+  const [error] = useState(null)
 
   const fetchFriends = async sort => {
     const res = await query(`/friend/get${sort ? `?sort=${sort}` : ''}`)

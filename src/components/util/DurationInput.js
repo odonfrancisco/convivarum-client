@@ -18,7 +18,7 @@ export default function DurationInput({ keyed, label, def = 0, setFormData }) {
 
   useEffect(() => {
     parseActionInterval({ val: def, setNumberValue, setSelectValue })
-  }, [])
+  }, [def])
 
   const updateFormData = () => {
     setFormData(prev => ({ ...prev, [keyed]: numberValue * SELECT_MS[selectValue] }))
