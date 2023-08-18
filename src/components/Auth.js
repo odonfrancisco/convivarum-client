@@ -17,7 +17,7 @@ export default function AuthComponent() {
   const handleSubmit = async event => {
     event.preventDefault()
 
-    if (!username || !password || (!isLogin && email)) {
+    if (!username || !password || (!isLogin && !email)) {
       // toast
       return
     }
