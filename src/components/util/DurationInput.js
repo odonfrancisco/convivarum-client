@@ -20,15 +20,16 @@ export default function DurationInput({ keyed, label, def = 0, setFormData }) {
     parseActionInterval({ val: def, setNumberValue, setSelectValue })
   }, [def])
 
-  const updateFormData = () => {
-    setFormData(prev => ({ ...prev, [keyed]: numberValue * SELECT_MS[selectValue] }))
+  const updateFormData = ({ select = selectValue, ms = numberValue } = {}) => {
+    setFormData(prev => ({ ...prev, [keyed]: ms * SELECT_MS[select] }))
   }
 
   const handleNumberChange = e => {
     const value = parseInt(e.target.value, 10)
-    const up = value >= 0 ? value : 0
+    const up = value < 0 ? 0 : value
     setNumberValue(up)
-    updateFormData()
+    // Why do i have to do this? Why can't i just grab numberValue inside updateFormData?
+    updateFormData({ ms: up })
   }
 
   return (
@@ -41,6 +42,9 @@ export default function DurationInput({ keyed, label, def = 0, setFormData }) {
         variant="outlined"
         InputProps={{
           endAdornment: <InputAdornment position="end">{selectValue}</InputAdornment>,
+          min: 0,
+          max: 999,
+          inputMode: 'numeric',
         }}
       />
 
@@ -50,7 +54,7 @@ export default function DurationInput({ keyed, label, def = 0, setFormData }) {
           value={selectValue}
           onChange={e => {
             setSelectValue(e.target.value)
-            updateFormData()
+            updateFormData({ select: e.target.value })
           }}
           label="Unit"
         >

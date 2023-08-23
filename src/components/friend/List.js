@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 
 import query from '#query.js'
-import { SORT_TYPES, FRIEND_FIELDS } from '#config.js'
+import { SORT_TYPES, SORT_INDEXES } from '#config.js'
 import InputForm from '#components/util/Input.js'
 import ListItemComponent from '#components/friend/Item.js'
 
@@ -24,6 +24,7 @@ function FriendList() {
   const [sort, setSort] = useState(SORT_TYPES[1])
   const [error] = useState(null)
 
+  // I agree i shouldn't be calling fetchFriends this often
   const fetchFriends = async sort => {
     const res = await query(`/friend/get${sort ? `?sort=${sort}` : ''}`)
 
@@ -34,19 +35,19 @@ function FriendList() {
   }
 
   useEffect(() => {
-    fetchFriends()
-  }, [])
+    // Should just sort internally instead of calling APi. too much unecessary load
+    fetchFriends(sort)
+  }, [sort])
 
-  const onFormSubmit = (formData, apiRes) => {
-    fetchFriends()
+  // Should just fetch the individual friend edited
+  const onFormSubmit = () => {
+    fetchFriends(sort)
   }
 
   const updateSort = async () => {
-    const newSort = SORT_TYPES[parseInt(sort[0], 10) + 1] || SORT_TYPES[0]
+    const newSort = SORT_TYPES[SORT_INDEXES[sort] + 1] || SORT_TYPES[0]
 
     setSort(newSort)
-    // Should just sort internally instead of calling APi. too much unecessary load
-    await fetchFriends(newSort[1])
   }
 
   if (loading)
@@ -70,7 +71,7 @@ function FriendList() {
         </Typography>
 
         <Button onClick={updateSort} variant="outlined">
-          {sort[1]}
+          {sort}
         </Button>
         <Button onClick={() => setCollapse(!collapse)} variant="outlined">
           {collapse ? 'Expand' : 'Collapse'}
@@ -85,7 +86,7 @@ function FriendList() {
           <ListItemComponent
             k={k}
             v={v}
-            fetchFriends={fetchFriends}
+            fetchFriends={onFormSubmit}
             editingMode={editingMode}
             collapse={collapse}
           />
@@ -97,7 +98,7 @@ function FriendList() {
       <Box mt={3}>
         <InputForm
           text="Add Friend"
-          fields={FRIEND_FIELDS()}
+          type="friend"
           onFormSubmit={onFormSubmit}
           url={'/friend/create'}
         />

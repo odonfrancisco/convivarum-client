@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from '@emotion/styled'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -10,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem'
 
 import query from '#query'
 import DurationInput from './DurationInput'
+import { FIELDS } from '#config.js'
 
 const StyledForm = styled.div`
   max-width: 400px;
@@ -17,17 +18,30 @@ const StyledForm = styled.div`
   padding: 10px;
 `
 
-function InputForm({ fields, onFormSubmit, url, text, show = false }) {
-  const initialState = fields.reduce((acc, field) => {
-    acc[field.key] =
-      field.default ||
-      (field.type === 'select' ? field.enum[0] : field.type === 'checkbox' ? false : '')
-    return acc
-  }, {})
-
-  const [formData, setFormData] = useState(initialState)
+// Would be nice to have some sort of state where only one input form can be opened at a time when viewing the friends list
+function InputForm({ type, obj, onFormSubmit, url, text, show = false }) {
+  const [formData, setFormData] = useState({})
+  const [fields, setFields] = useState([])
   const [showForm, setShowForm] = useState(show)
   const [validationErrors, setValidationErrors] = useState({})
+
+  useEffect(() => {
+    const updateForm = () => {
+      const yielder = FIELDS[type](obj)
+      setFields(yielder)
+
+      setFormData(
+        yielder.reduce((acc, field) => {
+          acc[field.key] =
+            field.default ||
+            (field.type === 'select' ? field.enum[0] : field.type === 'checkbox' ? false : '')
+          return acc
+        }, {}),
+      )
+    }
+
+    updateForm()
+  }, [obj, type])
 
   const handleInputChange = (name, value) => {
     setFormData(prevData => ({ ...prevData, [name]: value }))
@@ -51,8 +65,6 @@ function InputForm({ fields, onFormSubmit, url, text, show = false }) {
     }
 
     const response = await query(url, { method: 'post', payload: formData })
-
-    // Handle response as needed...
 
     setShowForm(false)
     if (onFormSubmit) onFormSubmit(formData, response)
@@ -120,7 +132,12 @@ function InputForm({ fields, onFormSubmit, url, text, show = false }) {
         </Button>
       </Box>
       {!show && (
-        <Button variant="text" color="secondary" onClick={() => setShowForm(false)}>
+        <Button
+          style={{ marginTop: '20px' }}
+          variant="text"
+          color="secondary"
+          onClick={() => setShowForm(false)}
+        >
           Hide Form
         </Button>
       )}

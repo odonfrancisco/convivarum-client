@@ -8,7 +8,6 @@ import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 
 import InputForm from '#components/util/Input.js'
-import { FRIEND_FIELDS } from '#config'
 
 function FriendItemComponent({ friend, onSubmit, isEditing }) {
   return (
@@ -27,7 +26,7 @@ function FriendItemComponent({ friend, onSubmit, isEditing }) {
           </Typography>
           {friend.lastContacted && (
             <Typography variant="body2" sx={{ mt: 0.5 }}>
-              Last Contacted: {formatDistance(friend.lastContacted, Date.now())}
+              Last Contacted: {formatDistance(friend.lastContacted, Date.now())} ago
             </Typography>
           )}
           <Typography variant="body2" sx={{ mt: 0.5 }}>
@@ -42,7 +41,8 @@ function FriendItemComponent({ friend, onSubmit, isEditing }) {
             // Should just fetch the individual friend instead of the entire array in order to reduce api load
             onFormSubmit={onSubmit}
             url={`/friend/update/${friend._id}`}
-            fields={FRIEND_FIELDS(friend)}
+            type="friend"
+            obj={friend}
           />
         </div>
       )}
