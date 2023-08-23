@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom'
 import React, { useState, useContext } from 'react'
 
 import query from '#query.js'
+import Error from '#components/util/Error.js'
 import UserContext from '#context/UserContext.js'
-import { PROD } from '#config.js'
 
 export default function AuthComponent() {
   const Navigate = useNavigate()
@@ -13,12 +13,13 @@ export default function AuthComponent() {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
   const handleSubmit = async event => {
     event.preventDefault()
 
     if (!username || !password || (!isLogin && !email)) {
-      // toast
+      setError('Please complete all fields')
       return
     }
 
@@ -27,6 +28,9 @@ export default function AuthComponent() {
       password,
       ...(!isLogin && { email }),
     }
+    for (const key of Object.keys(payload))
+      if (key !== 'password') payload[key] = payload[key].toLowerCase()
+
     const res = await query(`/auth/${isLogin ? 'login' : 'signup'}`, { method: 'post', payload })
     if (res.success) {
       Navigate('/friends')
@@ -35,12 +39,10 @@ export default function AuthComponent() {
       setUsername('')
       setEmail('')
       setPassword('')
-
-      if (!PROD) console.log('Logged in successfully')
+    } else if (res.err) {
+      setError(res.err.response.data.err.message)
     } else {
-      if (!PROD) console.log('Login unsuccessful')
-
-      // toast
+      setError('Error attempting to login. Please try again')
     }
   }
 
@@ -84,6 +86,8 @@ export default function AuthComponent() {
       <button onClick={() => setIsLogin(!isLogin)}>
         {isLogin ? 'Switch to Sign Up' : 'Switch to Login'}
       </button>
+
+      <Error error={error} setError={setError} />
     </div>
   )
 }
