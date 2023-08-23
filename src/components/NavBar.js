@@ -1,10 +1,8 @@
 import React, { useContext } from 'react'
-import { NavLink } from 'react-router-dom'
 
 // Update MUI imports
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
@@ -12,7 +10,6 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 // Update icon imports
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
 import VerifiedUser from '@mui/icons-material/VerifiedUser'
-import LowPriorityIcon from '@mui/icons-material/LowPriority'
 
 import NavButton from '#components/util/NavButton.js'
 import UserContext from '#context/UserContext.js'
