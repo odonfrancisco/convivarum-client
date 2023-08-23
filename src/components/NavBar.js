@@ -14,6 +14,7 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
 import VerifiedUser from '@mui/icons-material/VerifiedUser'
 import LowPriorityIcon from '@mui/icons-material/LowPriority'
 
+import NavButton from '#components/util/NavButton.js'
 import UserContext from '#context/UserContext.js'
 
 const theme = createTheme({
@@ -23,24 +24,6 @@ const theme = createTheme({
     },
   },
 })
-
-const NavButton = ({ link, icon, text }) => (
-  <NavLink to={link}>
-    <IconButton
-      sx={{
-        textDecoration: 'none',
-        color: '#eeeeee',
-      }}
-    >
-      <Grid container direction="column">
-        <Grid item>{icon}</Grid>
-        <Grid item>
-          <Typography>{text}</Typography>
-        </Grid>
-      </Grid>
-    </IconButton>
-  </NavLink>
-)
 
 export default function NavBar() {
   const { user } = useContext(UserContext)
@@ -63,21 +46,12 @@ export default function NavBar() {
           </Grid>
           {user && (
             <Grid item xs={2}>
-              <NavButton link={'/friends'} icon={<FormatListBulletedIcon />} text={'My Friends'} />
+              <NavButton link={'/friends'} icon={<FormatListBulletedIcon />} text={'Friends'} />
             </Grid>
           )}
           {user && (
             <Grid item xs={2}>
               <NavButton link={'/user'} icon={<VerifiedUser />} text={'Profile'} />
-            </Grid>
-          )}
-          {user ? (
-            <Grid item xs={2}>
-              <NavButton link={'/logout'} icon={<LowPriorityIcon />} text={'Logout'} />
-            </Grid>
-          ) : (
-            <Grid item xs={2}>
-              <NavButton link={'/auth'} icon={<LowPriorityIcon />} text={'Login'} />
             </Grid>
           )}
         </Grid>

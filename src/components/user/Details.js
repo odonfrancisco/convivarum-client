@@ -2,11 +2,12 @@ import React, { useContext, useState } from 'react'
 import formatDistance from 'date-fns/formatDistance'
 import styled from '@emotion/styled'
 import Button from '@mui/material/Button'
+import LowPriorityIcon from '@mui/icons-material/LowPriority'
 
 import UserContext from '#context/UserContext.js'
 import InputForm from '#components/util/Input.js'
-import { USER_FIELDS } from '#config'
 import parseActionInterval from '#fn/parseActionInterval.js'
+import NavButton from '#components/util/NavButton.js'
 
 const UserDetailsContainer = styled.div`
   max-width: 600px;
@@ -22,22 +23,36 @@ const UserDetail = styled.div`
 
 const FreqDetail = styled.div`
   margin-left: 20px;
+  margin-bottom: 20px; // space between each action detail
+`
+
+const ActionTitle = styled.strong`
+  display: block;
+  margin-bottom: 10px;
+`
+
+const ActionSubDetail = styled.div`
+  margin-left: 40px; // to give it the outline effect
 `
 
 const ActionDetail = ({ user, action }) => {
   return (
     <FreqDetail>
-      <strong>{action}: </strong>
-      Last -{' '}
-      {!user.action[action].last ? 'never' : formatDistance(user.action[action].last, Date.now())},
-      Interval - {parseActionInterval({ val: user.action[action].interval })}
+      <ActionTitle>{action}</ActionTitle>
+      <ActionSubDetail>
+        Last:{' '}
+        {!user.action[action].last ? 'never' : formatDistance(user.action[action].last, Date.now())}
+      </ActionSubDetail>
+      <ActionSubDetail>
+        Interval: {parseActionInterval({ val: user.action[action].interval })}
+      </ActionSubDetail>
     </FreqDetail>
   )
 }
 
 // Missing small details like re-fetching/updating the existing user in context on successful call
 function UserProfile() {
-  const { user } = useContext(UserContext)
+  const { user, getUser } = useContext(UserContext)
 
   const [editingMode, setEditingMode] = useState(false)
 
@@ -45,15 +60,28 @@ function UserProfile() {
 
   return (
     <div>
-      <Button onClick={() => setEditingMode(!editingMode)} variant="outlined">
-        {editingMode ? 'Done' : 'Edit'}
-      </Button>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Button onClick={() => setEditingMode(!editingMode)} variant="outlined">
+          {editingMode ? 'Done' : 'Edit'}
+        </Button>
+
+        <NavButton
+          link={'/logout'}
+          icon={<LowPriorityIcon color="red" htmlColor="red" />}
+          text={'Logout'}
+          textColor="red"
+        />
+      </div>
 
       {editingMode ? (
         <InputForm
           text="Edit thyself"
-          fields={USER_FIELDS(user)}
-          // onFormSubmit
+          type="user"
+          obj={user}
+          onFormSubmit={() => {
+            getUser()
+            setEditingMode(false)
+          }}
           show={true}
           url={'/user/update'}
         />
@@ -69,7 +97,7 @@ function UserProfile() {
 
           <UserDetail>
             <strong>Actions:</strong>
-            {['call', 'text', 'hang'].map(action => (
+            {['call', 'hang', 'text'].map(action => (
               <ActionDetail action={action} user={user} />
             ))}
           </UserDetail>
