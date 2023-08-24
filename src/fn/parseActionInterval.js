@@ -3,9 +3,9 @@ import { SELECT_MS } from '#config'
 export default function parseActionInterval({ val, setSelectValue, setNumberValue }) {
   if (!val) {
     if (setNumberValue) setNumberValue(val)
-
     return 'none'
   }
+
   for (const [select, ms] of Object.entries(SELECT_MS)) {
     if (parseInt(val, 10) % ms === 0) {
       const parsedVal = val / ms

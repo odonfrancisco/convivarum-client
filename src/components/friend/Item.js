@@ -9,7 +9,20 @@ import MenuIcon from '@mui/icons-material/Menu'
 
 import InputForm from '#components/util/Input.js'
 
-function FriendItemComponent({ friend, onSubmit, isEditing }) {
+// Object of itemTypes -> sort
+const hideItem = {
+  action: {
+    action: true,
+    current: true,
+  },
+  lastContacted: {
+    current: true,
+  },
+  contacted: { contacted: true, current: true, enabled: true },
+  details: { contacted: true, action: true, enabled: true },
+}
+
+function FriendItemComponent({ sort, friend, onSubmit, isEditing }) {
   return (
     <div key={friend._id}>
       <ListItem
@@ -18,20 +31,26 @@ function FriendItemComponent({ friend, onSubmit, isEditing }) {
       >
         <Box>
           <Typography variant="h6">{friend.name}</Typography>
-          {/* <Typography variant="body1" sx={{ mt: 0.5 }}>
-            {friend.details}
-          </Typography> */}
-          <Typography variant="body2" sx={{ mt: 0.5 }}>
-            Contacted: {String(friend.contacted)}
-          </Typography>
-          {friend.lastContacted && (
+          {!hideItem.details[sort] && (
+            <Typography variant="body1" sx={{ mt: 0.5 }}>
+              {friend.details}
+            </Typography>
+          )}{' '}
+          {!hideItem.contacted[sort] && (
+            <Typography variant="body2" sx={{ mt: 0.5 }}>
+              Contacted: {String(friend.contacted)}
+            </Typography>
+          )}{' '}
+          {friend.lastContacted && !hideItem.lastContacted[sort] && (
             <Typography variant="body2" sx={{ mt: 0.5 }}>
               Last Contacted: {formatDistance(friend.lastContacted, Date.now())} ago
             </Typography>
           )}
-          <Typography variant="body2" sx={{ mt: 0.5 }}>
-            {String(friend.action)}
-          </Typography>
+          {!hideItem.action[sort] && (
+            <Typography variant="body2" sx={{ mt: 0.5 }}>
+              {String(friend.action)}
+            </Typography>
+          )}
         </Box>
       </ListItem>{' '}
       {isEditing && (
@@ -50,7 +69,7 @@ function FriendItemComponent({ friend, onSubmit, isEditing }) {
   )
 }
 
-export default function ListItemComponent({ k, v, collapse, fetchFriends, editingMode }) {
+export default function ListItemComponent({ k, v, collapse, fetchFriends, editingMode, sort }) {
   const [innerCollapse, setInnerCollapse] = useState(collapse)
   const [manuallyToggled, setManuallyToggled] = useState(false)
 
@@ -81,7 +100,12 @@ export default function ListItemComponent({ k, v, collapse, fetchFriends, editin
       {(manuallyToggled ? !innerCollapse : !collapse || !innerCollapse) && (
         <List>
           {v.map(friend => (
-            <FriendItemComponent friend={friend} onSubmit={fetchFriends} isEditing={editingMode} />
+            <FriendItemComponent
+              friend={friend}
+              onSubmit={fetchFriends}
+              isEditing={editingMode}
+              sort={sort}
+            />
           ))}
         </List>
       )}

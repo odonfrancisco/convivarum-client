@@ -71,6 +71,7 @@ function FriendList() {
         </Typography>
 
         <Button onClick={updateSort} variant="outlined">
+          {/* Need to omit the 'current' sort when none exist for it. will accomplish after i begin sorting friends on frontend */}
           {sort}
         </Button>
         <Button onClick={() => setCollapse(!collapse)} variant="outlined">
@@ -89,6 +90,7 @@ function FriendList() {
             fetchFriends={onFormSubmit}
             editingMode={editingMode}
             collapse={collapse}
+            sort={sort}
           />
         ) : (
           ''
