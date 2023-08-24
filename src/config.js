@@ -34,7 +34,7 @@ export const FIELDS = {
         ? [
             {
               key: 'delayNext',
-              name: 'Delay action start',
+              name: 'Send first email',
               type: 'duration',
             },
           ]
