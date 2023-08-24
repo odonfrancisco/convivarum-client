@@ -18,6 +18,21 @@ const StyledForm = styled.div`
   padding: 10px;
 `
 
+const makeFormData = fields =>
+  fields.reduce((acc, field) => {
+    acc[field.key] =
+      field.default ||
+      (field.type === 'select' ? field.enum[0] : field.type === 'checkbox' ? false : '')
+    return acc
+  }, {})
+
+const getData = ({ type, obj }) => {
+  const fields = FIELDS[type](obj)
+  const formData = makeFormData(fields)
+
+  return { fields, formData }
+}
+
 // Would be nice to have some sort of state where only one input form can be opened at a time when viewing the friends list
 function InputForm({ type, obj, onFormSubmit, url, text, show = false }) {
   const [formData, setFormData] = useState({})
@@ -27,21 +42,12 @@ function InputForm({ type, obj, onFormSubmit, url, text, show = false }) {
 
   useEffect(() => {
     const updateForm = () => {
-      const yielder = FIELDS[type](obj)
-      setFields(yielder)
-
-      setFormData(
-        yielder.reduce((acc, field) => {
-          acc[field.key] =
-            field.default ||
-            (field.type === 'select' ? field.enum[0] : field.type === 'checkbox' ? false : '')
-          return acc
-        }, {}),
-      )
+      const { fields, formData } = getData({ type, obj })
+      setFields(fields)
+      setFormData(formData)
     }
-
     updateForm()
-  }, [obj, type])
+  }, [type, obj])
 
   const handleInputChange = (name, value) => {
     setFormData(prevData => ({ ...prevData, [name]: value }))
@@ -68,6 +74,11 @@ function InputForm({ type, obj, onFormSubmit, url, text, show = false }) {
 
     setShowForm(false)
     if (onFormSubmit) onFormSubmit(formData, response)
+    if (!obj) {
+      const { fields, formData } = getData({ type, obj })
+      setFields(fields)
+      setFormData(formData)
+    }
   }
 
   const renderInput = field => {
