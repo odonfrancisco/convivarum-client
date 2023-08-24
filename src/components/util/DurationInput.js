@@ -14,7 +14,7 @@ import parseActionInterval from '#fn/parseActionInterval'
 
 export default function DurationInput({ keyed, label, def = 0, setFormData }) {
   const [numberValue, setNumberValue] = useState(def)
-  const [selectValue, setSelectValue] = useState('hours')
+  const [selectValue, setSelectValue] = useState('days')
 
   useEffect(() => {
     parseActionInterval({ val: def, setNumberValue, setSelectValue })
@@ -58,9 +58,9 @@ export default function DurationInput({ keyed, label, def = 0, setFormData }) {
           }}
           label="Unit"
         >
-          <MenuItem value="hours">Hours</MenuItem>
-          <MenuItem value="days">Days</MenuItem>
-          <MenuItem value="weeks">Weeks</MenuItem>
+          {Object.keys(SELECT_MS).map(value => (
+            <MenuItem value={value}>{value.toUpperCase()}</MenuItem>
+          ))}
         </Select>
       </FormControl>
     </Box>

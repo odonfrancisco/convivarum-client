@@ -1,13 +1,16 @@
 export const PROD = process.env.NODE_ENV === 'production'
 
 export const HOUR = 3.6e6
-export const SORT_TYPES = ['enabled', 'action', 'contacted']
+export const SORT_TYPES = ['enabled', 'action', 'contacted', 'current']
 export const SORT_INDEXES = SORT_TYPES.reduce((a, c, i) => ({ ...a, [c]: i }), {})
 
 export const SELECT_MS = {
+  months: HOUR * 24 * 30,
   weeks: HOUR * 24 * 7,
   days: HOUR * 24,
-  hours: HOUR,
+  ...(!PROD && {
+    seconds: HOUR / 60 / 60,
+  }),
 }
 
 export const FIELDS = {
@@ -27,15 +30,15 @@ export const FIELDS = {
         type: 'duration',
         default: obj.interval || 0,
       })),
-      // ...(!obj.next
-      //   ? [
-      //       {
-      //         key: 'delayNext',
-      //         name: 'Delay distribution start',
-      //         type: 'duration',
-      //       },
-      //     ]
-      //   : []),
+      ...(!obj.next
+        ? [
+            {
+              key: 'delayNext',
+              name: 'Delay action start',
+              type: 'duration',
+            },
+          ]
+        : []),
     ]
 
     return arr.map(obj => {
@@ -52,7 +55,7 @@ export const FIELDS = {
         default: obj?.name || '',
       },
       { name: 'action', type: 'select', enum: ['call', 'text', 'hang'], default: obj?.action },
-      { name: 'enabled', type: 'checkbox', default: obj?.enabled || false },
+      { name: 'enabled', type: 'checkbox', default: obj ? obj.enabled : true },
       { name: 'contacted', type: 'checkbox', default: obj?.contacted || false },
 
       { name: 'details', type: 'text', default: obj?.details },
