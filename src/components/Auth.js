@@ -40,7 +40,8 @@ export default function AuthComponent() {
       setEmail('')
       setPassword('')
     } else if (res.err) {
-      setError(res.err.response.data.err.message)
+      const errMsg = res.err.response?.data?.msg || res.err.response?.data?.err?.message
+      setError(errMsg)
     } else {
       setError('Error attempting to login. Please try again')
     }

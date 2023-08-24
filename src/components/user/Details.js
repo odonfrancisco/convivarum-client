@@ -41,7 +41,9 @@ const ActionDetail = ({ user, action }) => {
       <ActionTitle>{action}</ActionTitle>
       <ActionSubDetail>
         Last:{' '}
-        {!user.action[action].last ? 'never' : formatDistance(user.action[action].last, Date.now())}
+        {!user.action[action].last
+          ? 'never'
+          : `${formatDistance(user.action[action].last, Date.now())} ago`}
       </ActionSubDetail>
       <ActionSubDetail>
         Interval: {parseActionInterval({ val: user.action[action].interval })}
@@ -93,6 +95,12 @@ function UserProfile() {
 
           <UserDetail>
             <strong>Email:</strong> {user.email}
+          </UserDetail>
+
+          <UserDetail>
+            <strong>Next email:</strong> {user.next > Date.now() ? `in${' '}` : ''}
+            {user.next ? formatDistance(user.next, Date.now()) : 'Not yet set'}
+            {Date.now() > user.next ? ' ago' : ''}
           </UserDetail>
 
           <UserDetail>
