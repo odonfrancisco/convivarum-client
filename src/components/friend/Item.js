@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react'
 import formatDistance from 'date-fns/formatDistance'
 import Box from '@mui/material/Box'
 import List from '@mui/material/List'
+import Tooltip from '@mui/material/Tooltip'
 import ListItem from '@mui/material/ListItem'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
+import ChangeCircle from '@mui/icons-material/ChangeCircle'
 
 import InputForm from '#components/util/Input.js'
+import query from '#query.js'
 
 // Object of itemTypes -> sort
 const hideItem = {
@@ -69,21 +72,31 @@ function FriendItemComponent({ sort, friend, onSubmit, isEditing }) {
   )
 }
 
-export default function ListItemComponent({ k, v, collapse, fetchFriends, editingMode, sort }) {
+export default function ListItemComponent({
+  action,
+  arr,
+  collapse,
+  fetchFriends,
+  editingMode,
+  sort,
+}) {
   const [innerCollapse, setInnerCollapse] = useState(collapse)
-  const [manuallyToggled, setManuallyToggled] = useState(false)
 
   const handleCollapseToggle = async () => {
     setInnerCollapse(v => !v)
-    setManuallyToggled(true)
+  }
+
+  const handleChangeCurrent = async () => {
+    const ext = `/friend/changeCurrent?action=${action}`
+    const res = await query(ext)
+
+    if (res) fetchFriends()
   }
 
   useEffect(() => {
     const inferNext = () => {
       if (collapse) setInnerCollapse(true)
       else setInnerCollapse(false)
-
-      setManuallyToggled(false)
     }
 
     inferNext()
@@ -92,14 +105,21 @@ export default function ListItemComponent({ k, v, collapse, fetchFriends, editin
   return (
     <div>
       <Typography variant="h6">
-        {k}{' '}
+        {action}{' '}
         <IconButton onClick={handleCollapseToggle}>
           <MenuIcon />
         </IconButton>
+        {sort === 'current' && editingMode && (
+          <Tooltip title="Change current">
+            <IconButton onClick={handleChangeCurrent}>
+              <ChangeCircle />
+            </IconButton>
+          </Tooltip>
+        )}
       </Typography>
-      {(manuallyToggled ? !innerCollapse : !collapse || !innerCollapse) && (
+      {!innerCollapse && (
         <List>
-          {v.map(friend => (
+          {arr.map(friend => (
             <FriendItemComponent
               friend={friend}
               onSubmit={fetchFriends}

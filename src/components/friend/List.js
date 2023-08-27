@@ -82,11 +82,11 @@ function FriendList() {
         </Button>
       </Box>
 
-      {Object.entries(friends).map(([k, v]) =>
-        v.length ? (
+      {Object.entries(friends).map(([action, arr]) =>
+        arr.length ? (
           <ListItemComponent
-            k={k}
-            v={v}
+            action={action}
+            arr={arr}
             fetchFriends={onFormSubmit}
             editingMode={editingMode}
             collapse={collapse}
