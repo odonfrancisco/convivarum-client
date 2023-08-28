@@ -9,6 +9,8 @@ import InputForm from '#components/util/Input.js'
 import parseActionInterval from '#fn/parseActionInterval.js'
 import NavButton from '#components/util/NavButton.js'
 
+import { ACTIONS } from '#config'
+
 const UserDetailsContainer = styled.div`
   max-width: 600px;
   margin: 0 auto;
@@ -105,7 +107,7 @@ function UserProfile() {
 
           <UserDetail>
             <strong>Actions:</strong>
-            {['call', 'hang', 'text'].map(action => (
+            {ACTIONS.map(action => (
               <ActionDetail action={action} user={user} />
             ))}
           </UserDetail>
