@@ -2,9 +2,16 @@ export const PROD = process.env.NODE_ENV === 'production'
 
 export const HOUR = 3.6e6
 export const SORT_TYPES = ['enabled', 'action', 'contacted', 'current']
-export const SORT_INDEXES = SORT_TYPES.reduce((a, c, i) => ({ ...a, [c]: i }), {})
+export const TYPE_INDEXES = SORT_TYPES.reduce((a, c, i) => ({ ...a, [c]: i }), {})
 
-export const ACTIONS = ['hang', 'call', 'text']
+export const ACTIONS = ['convene', 'call', 'text']
+export const SORT_ACTIONS = [...ACTIONS, 'all']
+export const ACTION_INDEXES = SORT_ACTIONS.reduce((a, c, i) => ({ ...a, [c]: i }), {})
+
+export const INVALID_SORT = SORT_ACTIONS.reduce(
+  (a, c) => ({ ...a, [c]: ['action'].reduce((a, s) => ({ ...a, [s]: 1 }), {}) }),
+  {},
+)
 
 export const SELECT_MS = {
   ...(!PROD && {

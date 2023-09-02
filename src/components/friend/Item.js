@@ -11,16 +11,12 @@ import ChangeCircle from '@mui/icons-material/ChangeCircle'
 
 import InputForm from '#components/util/Input.js'
 import query from '#query.js'
+import { ACTIONS } from '#config'
 
 // Object of itemTypes -> sort
 const hideItem = {
-  action: {
-    action: true,
-    current: true,
-  },
-  lastContacted: {
-    current: true,
-  },
+  action: ACTIONS.reduce((a, c) => ({ ...a, [c]: 1 }), {}),
+  lastContacted: { current: true },
   contacted: { contacted: true, current: true, enabled: true },
   details: { contacted: true, action: true, enabled: true },
 }
@@ -34,22 +30,23 @@ function FriendItemComponent({ sort, friend, onSubmit, isEditing }) {
       >
         <Box>
           <Typography variant="h6">{friend.name}</Typography>
-          {!hideItem.details[sort] && (
+          {!hideItem.details[sort.type] && (
             <Typography variant="body1" sx={{ mt: 0.5 }}>
               {friend.details}
             </Typography>
           )}{' '}
-          {!hideItem.contacted[sort] && (
+          {/* Right now this one doesn't even appear */}
+          {!hideItem.contacted[sort.type] && (
             <Typography variant="body2" sx={{ mt: 0.5 }}>
               Contacted: {String(friend.contacted)}
             </Typography>
           )}{' '}
-          {friend.lastContacted && !hideItem.lastContacted[sort] && (
+          {friend.lastContacted && !hideItem.lastContacted[sort.type] && (
             <Typography variant="body2" sx={{ mt: 0.5 }}>
               Last Contacted: {formatDistance(friend.lastContacted, Date.now())} ago
             </Typography>
           )}
-          {!hideItem.action[sort] && (
+          {!hideItem.action[sort.action] && (
             <Typography variant="body2" sx={{ mt: 0.5 }}>
               {String(friend.action)}
             </Typography>
@@ -109,7 +106,7 @@ export default function ListItemComponent({
         <IconButton onClick={handleCollapseToggle}>
           <MenuIcon />
         </IconButton>
-        {sort === 'current' && editingMode && (
+        {sort.type === 'current' && editingMode && (
           <Tooltip title="Change current">
             <IconButton onClick={handleChangeCurrent}>
               <ChangeCircle />

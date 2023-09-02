@@ -9,7 +9,7 @@ import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
 import query from '#query'
-import DurationInput from './DurationInput'
+import DurationInput from '#fn/DurationInput'
 import { FIELDS } from '#config.js'
 
 const StyledForm = styled.div`

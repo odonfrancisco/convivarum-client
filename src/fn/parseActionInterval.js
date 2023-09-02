@@ -6,7 +6,7 @@ export default function parseActionInterval({ val, setSelectValue, setNumberValu
     return 'none'
   }
 
-  for (const [select, ms] of Object.entries(SELECT_MS)) {
+  for (const [select, ms] of Object.entries(SELECT_MS).reverse()) {
     if (parseInt(val, 10) % ms === 0) {
       const parsedVal = val / ms
       if (setSelectValue && setNumberValue) {
