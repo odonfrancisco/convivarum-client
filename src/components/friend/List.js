@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import styled from '@emotion/styled'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -95,7 +95,7 @@ function FriendList() {
   const [sort, setSort] = useState({ action: SORT_ACTIONS[0], type: SORT_TYPES[3] })
   const [error] = useState(null)
 
-  const fetchFriends = async () => {
+  const fetchFriends = useCallback(async () => {
     const res = await query(`/friend/get`)
 
     if (res.data) {
@@ -109,11 +109,11 @@ function FriendList() {
 
       setLoading(false)
     }
-  }
+  }, [sort])
 
   useEffect(() => {
     fetchFriends()
-  }, [])
+  }, [fetchFriends])
 
   // Should just fetch the individual friend edited & update its respective paths
   const onFormSubmit = () => {
