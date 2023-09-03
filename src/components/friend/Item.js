@@ -73,7 +73,7 @@ export default function ListItemComponent({
   action,
   arr,
   collapse,
-  fetchFriends,
+  updateFriend,
   editingMode,
   sort,
 }) {
@@ -87,7 +87,7 @@ export default function ListItemComponent({
     const ext = `/friend/changeCurrent?action=${action}`
     const res = await query(ext)
 
-    if (res) fetchFriends()
+    if (res) updateFriend({ res })
   }
 
   useEffect(() => {
@@ -119,7 +119,7 @@ export default function ListItemComponent({
           {arr.map(friend => (
             <FriendItemComponent
               friend={friend}
-              onSubmit={fetchFriends}
+              onSubmit={updateFriend}
               isEditing={editingMode}
               sort={sort}
             />

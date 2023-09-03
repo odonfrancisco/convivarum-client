@@ -70,10 +70,10 @@ function InputForm({ type, obj, onFormSubmit, url, text, show = false }) {
       return
     }
 
-    const response = await query(url, { method: 'post', payload: formData })
+    const res = await query(url, { method: 'post', payload: formData })
 
     setShowForm(false)
-    if (onFormSubmit) onFormSubmit(formData, response)
+    if (onFormSubmit) onFormSubmit({ formData, res })
     if (!obj) {
       const { fields, formData } = getData({ type, obj })
       setFields(fields)

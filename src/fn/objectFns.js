@@ -242,14 +242,7 @@ export const mutUpdate = {
       return 0
     }
 
-    // try {
-    //   arr.push(toPush)
-    // } catch (err) {
-    //   console.log('wow')
-    //   return
-    // }
-
-    return arr.push(toPush)
+    return arr.push(toPush) - 1
   },
   addToSet: (obj, path, toPush) => {
     const arr = _.get(obj, path)
